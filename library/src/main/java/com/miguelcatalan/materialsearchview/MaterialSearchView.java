@@ -52,7 +52,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     //Views
     private View mSearchLayout;
-    private View mTintView;
     private ListView mSuggestionsListView;
     private EditText mSearchSrcTextView;
     private ImageButton mBackBtn;
@@ -154,13 +153,11 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mBackBtn = (ImageButton) mSearchLayout.findViewById(R.id.action_up_btn);
         mVoiceBtn = (ImageButton) mSearchLayout.findViewById(R.id.action_voice_btn);
         mEmptyBtn = (ImageButton) mSearchLayout.findViewById(R.id.action_empty_btn);
-        mTintView = mSearchLayout.findViewById(R.id.transparent_view);
 
         mSearchSrcTextView.setOnClickListener(mOnClickListener);
         mBackBtn.setOnClickListener(mOnClickListener);
         mVoiceBtn.setOnClickListener(mOnClickListener);
         mEmptyBtn.setOnClickListener(mOnClickListener);
-        mTintView.setOnClickListener(mOnClickListener);
 
         allowVoiceSearch = false;
 
@@ -228,8 +225,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
                 mSearchSrcTextView.setText(null);
             } else if (v == mSearchSrcTextView) {
                 showSuggestions();
-            } else if (v == mTintView) {
-                closeSearch();
             }
         }
     };
@@ -414,7 +409,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
      */
     public void setSuggestions(String[] suggestions) {
         if (suggestions != null && suggestions.length > 0) {
-            mTintView.setVisibility(VISIBLE);
             final SearchAdapter adapter = new SearchAdapter(mContext, suggestions, suggestionIcon, ellipsize);
             setAdapter(adapter);
 
@@ -424,8 +418,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
                     setQuery((String) adapter.getItem(position), submit);
                 }
             });
-        } else {
-            mTintView.setVisibility(GONE);
         }
     }
 
