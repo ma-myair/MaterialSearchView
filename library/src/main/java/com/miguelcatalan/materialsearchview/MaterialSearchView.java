@@ -49,6 +49,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private boolean mIsSearchOpen = false;
     private int mAnimationDuration;
     private boolean mClearingFocus;
+    private boolean showSuggestions = false;
 
     //Views
     private View mSearchLayout;
@@ -416,6 +417,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     setQuery((String) adapter.getItem(position), submit);
+                    showSuggestions = false;
                 }
             });
         }
@@ -605,9 +607,13 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         this.ellipsize = ellipsize;
     }
 
+    public void showSuggestions(boolean showSuggestions) {
+        this.showSuggestions = showSuggestions;
+    }
+
     @Override
     public void onFilterComplete(int count) {
-        if (count > 0) {
+        if (count > 0 && showSuggestions) {
             showSuggestions();
         } else {
             dismissSuggestions();
