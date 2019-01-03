@@ -48,9 +48,17 @@
             <ImageButton
                 android:id="@+id/action_empty_btn"
                 style="@style/MSV_ImageButton"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_toLeftOf="@id/filter_btn"
+                android:src="@drawable/ic_action_navigation_close"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/filter_btn"
+                style="@style/MSV_ImageButton"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_action_navigation_close"
+                android:src="@drawable/ic_filter_gray_levels"
                 android:visibility="gone"/>
 
             <View

@@ -58,6 +58,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private ImageButton mBackBtn;
     private ImageButton mVoiceBtn;
     private ImageButton mEmptyBtn;
+    private ImageButton mFilterBtn;
     private RelativeLayout mSearchTopBar;
 
     private CharSequence mOldQueryText;
@@ -154,6 +155,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mBackBtn = (ImageButton) mSearchLayout.findViewById(R.id.action_up_btn);
         mVoiceBtn = (ImageButton) mSearchLayout.findViewById(R.id.action_voice_btn);
         mEmptyBtn = (ImageButton) mSearchLayout.findViewById(R.id.action_empty_btn);
+        mFilterBtn = (ImageButton) mSearchLayout.findViewById(R.id.filter_btn);
 
         mSearchSrcTextView.setOnClickListener(mOnClickListener);
         mBackBtn.setOnClickListener(mOnClickListener);
@@ -609,6 +611,18 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     public void showSuggestions(boolean showSuggestions) {
         this.showSuggestions = showSuggestions;
+    }
+
+    public void setOnFilterClickListener(OnClickListener onClickListener) {
+        mFilterBtn.setOnClickListener(onClickListener);
+    }
+
+    public void showFilterIcon(boolean visible) {
+        mFilterBtn.setVisibility(visible ? VISIBLE : GONE);
+    }
+
+    public void isFilterActive(boolean isFilterActive) {
+        mFilterBtn.getDrawable().setLevel(isFilterActive ? 1 : 0);
     }
 
     @Override
