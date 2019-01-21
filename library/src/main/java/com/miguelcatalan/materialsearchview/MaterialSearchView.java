@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,7 +66,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private CharSequence mUserQuery;
 
     private OnQueryTextListener mOnQueryChangeListener;
-    private SearchViewListener mSearchViewListener;
+    private List<SearchViewListener> mSearchViewListeners;
 
     private ListAdapter mAdapter;
 
@@ -525,8 +526,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
         } else {
             mSearchLayout.setVisibility(VISIBLE);
-            if (mSearchViewListener != null) {
-                mSearchViewListener.onSearchViewShown();
+            if (mSearchViewListeners != null) {
+                for (SearchViewListener listener : mSearchViewListeners) {
+                    listener.onSearchViewShown();
+                }
             }
         }
         mIsSearchOpen = true;
@@ -541,8 +544,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
             @Override
             public boolean onAnimationEnd(View view) {
-                if (mSearchViewListener != null) {
-                    mSearchViewListener.onSearchViewShown();
+                if (mSearchViewListeners != null) {
+                    for (SearchViewListener listener : mSearchViewListeners) {
+                        listener.onSearchViewShown();
+                    }
                 }
                 return false;
             }
@@ -575,8 +580,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         clearFocus();
 
         mSearchLayout.setVisibility(GONE);
-        if (mSearchViewListener != null) {
-            mSearchViewListener.onSearchViewClosed();
+        if (mSearchViewListeners != null) {
+            for (SearchViewListener listener : mSearchViewListeners) {
+                listener.onSearchViewClosed();
+            }
         }
         mIsSearchOpen = false;
 
@@ -592,12 +599,32 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     }
 
     /**
-     * Set this listener to listen to Search View open and close events
+     * Set this listener to listen to Search View open and close events.
+     * Existing listeners are removed.
      *
      * @param listener
      */
     public void setOnSearchViewListener(SearchViewListener listener) {
-        mSearchViewListener = listener;
+        if (mSearchViewListeners == null) {
+            mSearchViewListeners = new ArrayList<>();
+        } else {
+            mSearchViewListeners.clear();
+        }
+        if (listener != null) {
+            mSearchViewListeners.add(listener);
+        }
+    }
+
+    /**
+     * Add this listener to listen to Search View open and close events
+     *
+     * @param listener
+     */
+    public void addOnSearchViewListener(SearchViewListener listener) {
+        if (mSearchViewListeners == null) {
+            mSearchViewListeners = new ArrayList<>();
+        }
+        mSearchViewListeners.add(listener);
     }
 
     /**
@@ -621,7 +648,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mFilterBtn.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void isFilterActive(boolean isFilterActive) {
+    public void setFilterActive(boolean isFilterActive) {
         mFilterBtn.getDrawable().setLevel(isFilterActive ? 1 : 0);
     }
 
