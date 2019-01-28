@@ -48,21 +48,19 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults filterResults = new FilterResults();
-                if (!TextUtils.isEmpty(constraint)) {
+                // Retrieve the autocomplete results.
+                List<String> searchData = new ArrayList<>();
 
-                    // Retrieve the autocomplete results.
-                    List<String> searchData = new ArrayList<>();
-
-                    for (String string : suggestions) {
-                        if (string.toLowerCase().startsWith(constraint.toString().toLowerCase())) {
-                            searchData.add(string);
-                        }
+                // In case of empty string add all suggestions
+                for (String string : suggestions) {
+                    if (TextUtils.isEmpty(constraint) || string.toLowerCase().startsWith(constraint.toString().toLowerCase())) {
+                        searchData.add(string);
                     }
-
-                    // Assign the data to the FilterResults
-                    filterResults.values = searchData;
-                    filterResults.count = searchData.size();
                 }
+
+                // Assign the data to the FilterResults
+                filterResults.values = searchData;
+                filterResults.count = searchData.size();
                 return filterResults;
             }
 
