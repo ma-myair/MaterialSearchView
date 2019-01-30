@@ -51,6 +51,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private int mAnimationDuration;
     private boolean mClearingFocus;
     private boolean showSuggestions = false;
+    private boolean hasFocusWhenOpened = true;
 
     //Views
     private View mSearchLayout;
@@ -517,9 +518,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
             return;
         }
 
-        //Request Focus
-        mSearchSrcTextView.setText(null);
-        mSearchSrcTextView.requestFocus();
+        if (hasFocusWhenOpened) {
+            mSearchSrcTextView.setText(null);
+            mSearchSrcTextView.requestFocus();
+        }
 
         if (animate) {
             setVisibleWithAnimation();
@@ -650,6 +652,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     public void setFilterActive(boolean isFilterActive) {
         mFilterBtn.getDrawable().setLevel(isFilterActive ? 1 : 0);
+    }
+
+    public void hasFocusWhenOpened(boolean hasFocus) {
+        this.hasFocusWhenOpened = hasFocus;
     }
 
     @Override
