@@ -52,6 +52,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private boolean mClearingFocus;
     private boolean showSuggestions = false;
     private boolean hasFocusWhenOpened = true;
+    private boolean filterSuggestionsWhenSearchEmpty = true;
 
     //Views
     private View mSearchLayout;
@@ -414,7 +415,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
      */
     public void setSuggestions(String[] suggestions) {
         if (suggestions != null && suggestions.length > 0) {
-            final SearchAdapter adapter = new SearchAdapter(mContext, suggestions, suggestionIcon, ellipsize);
+            final SearchAdapter adapter = new SearchAdapter(mContext, suggestions, suggestionIcon, ellipsize, filterSuggestionsWhenSearchEmpty);
             setAdapter(adapter);
 
             setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -656,6 +657,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     public void hasFocusWhenOpened(boolean hasFocus) {
         this.hasFocusWhenOpened = hasFocus;
+    }
+
+    public void filterSuggestionsWhenSearchEmpty(boolean filterSuggestionsWhenSearchEmpty) {
+        this.filterSuggestionsWhenSearchEmpty = filterSuggestionsWhenSearchEmpty;
     }
 
     @Override

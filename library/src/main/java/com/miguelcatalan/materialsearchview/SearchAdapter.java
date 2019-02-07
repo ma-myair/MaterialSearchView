@@ -27,6 +27,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     private Drawable suggestionIcon;
     private LayoutInflater inflater;
     private boolean ellipsize;
+    private boolean filterSuggestionsWhenSearchEmpty;
 
     public SearchAdapter(Context context, String[] suggestions) {
         inflater = LayoutInflater.from(context);
@@ -34,12 +35,13 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         this.suggestions = suggestions;
     }
 
-    public SearchAdapter(Context context, String[] suggestions, Drawable suggestionIcon, boolean ellipsize) {
+    public SearchAdapter(Context context, String[] suggestions, Drawable suggestionIcon, boolean ellipsize, boolean filterSuggestionsWhenSearchEmpty) {
         inflater = LayoutInflater.from(context);
         data = new ArrayList<>();
         this.suggestions = suggestions;
         this.suggestionIcon = suggestionIcon;
         this.ellipsize = ellipsize;
+        this.filterSuggestionsWhenSearchEmpty = filterSuggestionsWhenSearchEmpty;
     }
 
     @Override
@@ -51,9 +53,8 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                 // Retrieve the autocomplete results.
                 List<String> searchData = new ArrayList<>();
 
-                // In case of empty string add all suggestions
                 for (String string : suggestions) {
-                    if (TextUtils.isEmpty(constraint) || string.toLowerCase().startsWith(constraint.toString().toLowerCase())) {
+                    if ((TextUtils.isEmpty(constraint) && !filterSuggestionsWhenSearchEmpty) || string.toLowerCase().startsWith(constraint.toString().toLowerCase())) {
                         searchData.add(string);
                     }
                 }
