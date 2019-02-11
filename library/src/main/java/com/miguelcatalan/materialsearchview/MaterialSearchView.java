@@ -45,6 +45,7 @@ import java.util.List;
  */
 public class MaterialSearchView extends FrameLayout implements Filter.FilterListener {
     public static final int REQUEST_VOICE = 9999;
+    MaterialSearchView materialSearchView;
 
     private MenuItem mMenuItem;
     private boolean mIsSearchOpen = false;
@@ -53,6 +54,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private boolean showSuggestions = false;
     private boolean hasFocusWhenOpened = true;
     private boolean filterSuggestionsWhenSearchEmpty = true;
+    private boolean enableTintView = false;
 
     //Views
     private View mSearchLayout;
@@ -63,12 +65,14 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private ImageButton mEmptyBtn;
     private ImageButton mFilterBtn;
     private RelativeLayout mSearchTopBar;
+    private View mTintView;
 
     private CharSequence mOldQueryText;
     private CharSequence mUserQuery;
 
     private OnQueryTextListener mOnQueryChangeListener;
     private List<SearchViewListener> mSearchViewListeners;
+    private List<OnClickBackListener> onClickBackListeners;
 
     private ListAdapter mAdapter;
 
@@ -92,6 +96,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     public MaterialSearchView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs);
+        materialSearchView = this;
 
         mContext = context;
 
@@ -159,11 +164,13 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mVoiceBtn = (ImageButton) mSearchLayout.findViewById(R.id.action_voice_btn);
         mEmptyBtn = (ImageButton) mSearchLayout.findViewById(R.id.action_empty_btn);
         mFilterBtn = (ImageButton) mSearchLayout.findViewById(R.id.filter_btn);
+        mTintView = mSearchLayout.findViewById(R.id.transparent_view);
 
         mSearchSrcTextView.setOnClickListener(mOnClickListener);
         mBackBtn.setOnClickListener(mOnClickListener);
         mVoiceBtn.setOnClickListener(mOnClickListener);
         mEmptyBtn.setOnClickListener(mOnClickListener);
+        mTintView.setOnClickListener(mOnClickListener);
 
         allowVoiceSearch = false;
 
@@ -224,6 +231,11 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
         public void onClick(View v) {
             if (v == mBackBtn) {
+                if (onClickBackListeners != null) {
+                    for (OnClickBackListener listener : onClickBackListeners) {
+                        listener.onClickBack();
+                    }
+                }
                 closeSearch();
             } else if (v == mVoiceBtn) {
                 onVoiceClicked();
@@ -231,6 +243,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
                 mSearchSrcTextView.setText(null);
             } else if (v == mSearchSrcTextView) {
                 showSuggestions();
+            } else if (v == mTintView) {
+                dismissSuggestions();
+                hideKeyboard(materialSearchView);
             }
         }
     };
@@ -368,16 +383,19 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         allowVoiceSearch = voiceSearch;
     }
 
-    //Public Methods
-
     /**
      * Call this method to show suggestions list. This shows up when adapter is set. Call {@link #setAdapter(ListAdapter)} before calling this.
      */
     private void showSuggestions() {
         if (mAdapter != null && mAdapter.getCount() > 0 && mSuggestionsListView.getVisibility() == GONE) {
             mSuggestionsListView.setVisibility(VISIBLE);
+            if (enableTintView) {
+                mTintView.setVisibility(VISIBLE);
+            }
         }
     }
+
+    //Public Methods
 
     /**
      * Submit the query as soon as the user clicks the item.
@@ -434,6 +452,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     public void dismissSuggestions() {
         if (mSuggestionsListView.getVisibility() == VISIBLE) {
             mSuggestionsListView.setVisibility(GONE);
+            if (enableTintView) {
+                mTintView.setVisibility(GONE);
+            }
         }
     }
 
@@ -581,6 +602,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mSearchSrcTextView.setText(null);
         dismissSuggestions();
         clearFocus();
+        mAdapter = null;
+        mSuggestionsListView.setAdapter(null);
 
         mSearchLayout.setVisibility(GONE);
         if (mSearchViewListeners != null) {
@@ -661,6 +684,28 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     public void filterSuggestionsWhenSearchEmpty(boolean filterSuggestionsWhenSearchEmpty) {
         this.filterSuggestionsWhenSearchEmpty = filterSuggestionsWhenSearchEmpty;
+    }
+
+    public void enableTintView(boolean enableTintView) {
+        this.enableTintView = enableTintView;
+    }
+
+    public void setOnClickBackListener(OnClickBackListener onClickBackListener) {
+        if (this.onClickBackListeners == null) {
+            this.onClickBackListeners = new ArrayList<>();
+        } else {
+            this.onClickBackListeners.clear();
+        }
+        if (onClickBackListener != null) {
+            this.onClickBackListeners.add(onClickBackListener);
+        }
+    }
+
+    public void addOnClickBackListener(OnClickBackListener onClickBackListener) {
+        if (this.onClickBackListeners == null) {
+            this.onClickBackListeners = new ArrayList<>();
+        }
+        this.onClickBackListeners.add(onClickBackListener);
     }
 
     @Override
@@ -783,5 +828,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         void onSearchViewClosed();
     }
 
+    public interface OnClickBackListener {
+        void onClickBack();
+    }
 
 }
