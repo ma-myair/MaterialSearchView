@@ -45,7 +45,6 @@ import java.util.List;
  */
 public class MaterialSearchView extends FrameLayout implements Filter.FilterListener {
     public static final int REQUEST_VOICE = 9999;
-    MaterialSearchView materialSearchView;
 
     private MenuItem mMenuItem;
     private boolean mIsSearchOpen = false;
@@ -96,7 +95,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     public MaterialSearchView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs);
-        materialSearchView = this;
 
         mContext = context;
 
@@ -245,7 +243,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
                 showSuggestions();
             } else if (v == mTintView) {
                 dismissSuggestions();
-                hideKeyboard(materialSearchView);
+                hideKeyboard(MaterialSearchView.this);
             }
         }
     };
