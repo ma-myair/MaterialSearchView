@@ -72,6 +72,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private OnQueryTextListener mOnQueryChangeListener;
     private List<SearchViewListener> mSearchViewListeners;
     private List<OnClickBackListener> onClickBackListeners;
+    private List<OnSuggestionClickListener> onSuggestionClickListeners;
 
     private ListAdapter mAdapter;
 
@@ -706,6 +707,24 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         this.onClickBackListeners.add(onClickBackListener);
     }
 
+    public void setOnSuggestionClickListener(OnSuggestionClickListener onSuggestionClickListener) {
+        if (this.onSuggestionClickListeners == null) {
+            this.onSuggestionClickListeners = new ArrayList<>();
+        } else {
+            this.onSuggestionClickListeners.clear();
+        }
+        if (onSuggestionClickListener != null) {
+            this.onSuggestionClickListeners.add(onSuggestionClickListener);
+        }
+    }
+
+    public void addOnSuggestionClickListener(OnSuggestionClickListener onSuggestionClickListener) {
+        if (this.onSuggestionClickListeners == null) {
+            this.onSuggestionClickListeners = new ArrayList<>();
+        }
+        this.onSuggestionClickListeners.add(onSuggestionClickListener);
+    }
+
     @Override
     public void onFilterComplete(int count) {
         if (count > 0 && showSuggestions) {
@@ -830,4 +849,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         void onClickBack();
     }
 
+    public interface OnSuggestionClickListener {
+        void onSuggestionClick();
+    }
 }
