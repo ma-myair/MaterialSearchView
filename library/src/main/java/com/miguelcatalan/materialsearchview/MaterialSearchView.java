@@ -472,6 +472,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         }
         if (submit && !TextUtils.isEmpty(query)) {
             onSubmitQuery();
+            for (OnSuggestionClickListener listener : onSuggestionClickListeners) {
+                listener.onSuggestionClick();
+            }
         }
     }
 
