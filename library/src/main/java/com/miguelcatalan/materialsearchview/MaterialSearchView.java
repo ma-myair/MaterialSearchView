@@ -73,6 +73,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private List<SearchViewListener> mSearchViewListeners;
     private List<OnClickBackListener> onClickBackListeners;
     private List<OnSuggestionClickListener> onSuggestionClickListeners;
+    private OnSearchViewIsClosedListener mSearchViewIsClosedListener;
 
     private ListAdapter mAdapter;
 
@@ -614,7 +615,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
             }
         }
         mIsSearchOpen = false;
-
+        if (mSearchViewIsClosedListener != null) {
+            mSearchViewIsClosedListener.searchViewIsClosed();
+        }
     }
 
     /**
@@ -726,6 +729,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
             this.onSuggestionClickListeners = new ArrayList<>();
         }
         this.onSuggestionClickListeners.add(onSuggestionClickListener);
+    }
+
+    public void setOnSearchViewIsClosedListener(OnSearchViewIsClosedListener onSearchViewIsClosedListener) {
+        mSearchViewIsClosedListener = onSearchViewIsClosedListener;
     }
 
     @Override
@@ -854,5 +861,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     public interface OnSuggestionClickListener {
         void onSuggestionClick();
+    }
+
+    public interface OnSearchViewIsClosedListener {
+        void searchViewIsClosed();
     }
 }
