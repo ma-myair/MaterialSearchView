@@ -22,6 +22,7 @@
             android:id="@+id/search_top_bar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:focusableInTouchMode="true"
             android:background="@android:color/white">
 
             <EditText
