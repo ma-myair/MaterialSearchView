@@ -762,6 +762,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mClearingFocus = false;
     }
 
+    public CharSequence getUserQuery(){
+        return mUserQuery;
+    }
+
     @Override
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
