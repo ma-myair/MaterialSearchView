@@ -74,6 +74,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private List<OnClickBackListener> onClickBackListeners;
     private List<OnSuggestionClickListener> onSuggestionClickListeners;
     private OnSearchViewIsClosedListener mSearchViewIsClosedListener;
+    private OnEditTextFocusChangedListener onEditTextFocusChangedListener;
+    private OnSearchClearedListener onSearchClearedListener;
 
     private ListAdapter mAdapter;
 
@@ -213,6 +215,10 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mSearchSrcTextView.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+                if (onEditTextFocusChangedListener != null) {
+                    onEditTextFocusChangedListener.onFocusChanged(hasFocus);
+                }
+
                 if (hasFocus) {
                     showKeyboard(mSearchSrcTextView);
                     showSuggestions();
@@ -241,6 +247,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
                 onVoiceClicked();
             } else if (v == mEmptyBtn) {
                 mSearchSrcTextView.setText(null);
+                if (onSearchClearedListener != null) {
+                    onSearchClearedListener.onSearchCleared();
+                }
             } else if (v == mSearchSrcTextView) {
                 showSuggestions();
             } else if (v == mTintView) {
@@ -735,6 +744,18 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         mSearchViewIsClosedListener = onSearchViewIsClosedListener;
     }
 
+    public void setOnEditTextFocusChangedListener(OnEditTextFocusChangedListener onEditTextFocusChangedListener) {
+        this.onEditTextFocusChangedListener = onEditTextFocusChangedListener;
+    }
+
+    public void setOnSearchClearedListener(OnSearchClearedListener onSearchClearedListener) {
+        this.onSearchClearedListener = onSearchClearedListener;
+    }
+
+    public Editable getText() {
+        return mSearchSrcTextView.getText();
+    }
+
     @Override
     public void onFilterComplete(int count) {
         if (count > 0 && showSuggestions) {
@@ -869,5 +890,13 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
     public interface OnSearchViewIsClosedListener {
         void searchViewIsClosed();
+    }
+
+    public interface OnEditTextFocusChangedListener {
+        void onFocusChanged(Boolean hasFocus);
+    }
+
+    public interface OnSearchClearedListener {
+        void onSearchCleared();
     }
 }
