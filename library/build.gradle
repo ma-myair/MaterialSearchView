@@ -1,29 +1,28 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.novoda:bintray-release:0.9'
-    }
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 36
+
+    namespace "com.miguelcatalan.materialsearchview"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 36
         versionCode 1
-        versionName "1.4.18"
+        versionName "1.4.19"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    publishing {
+        singleVariant("release")
     }
 }
 
@@ -32,11 +31,16 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
 }
 
-publish {
-    userOrg = 'miguelcatalan'
-    groupId = 'com.miguelcatalan'
-    artifactId = 'materialsearchview'
-    publishVersion = '1.4.18'
-    desc = 'Cute library to implement SearchView in a Material Design Approach'
-    website = 'https://github.com/MiguelCatalan/MaterialSearchView'
+afterEvaluate {
+    publishing {
+        publications {
+            mavenRelease(MavenPublication) {
+                from components.release
+
+                groupId = "com.miguelcatalan"
+                artifactId = "materialsearchview"
+                version = "1.4.19"
+            }
+        }
+    }
 }
