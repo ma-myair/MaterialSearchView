@@ -17,6 +17,6 @@ allprojects {
     }
 }
 
-tasks.register('publishToMavenLocal') {
-    dependsOn ':library:publishToMavenLocal'
-}
+//tasks.register('publishToMavenLocal') {
+//    dependsOn ':library:publishToMavenLocal'
+//}
