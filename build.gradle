@@ -16,7 +16,3 @@ allprojects {
         google()
     }
 }
-
-tasks.register('publishToMavenLocal') {
-    dependsOn ':library:publishToMavenLocal'
-}
